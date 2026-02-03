@@ -1,0 +1,8 @@
+{
+  "short_name": "Bitcoin Investment",
+  "name": "Bitcoin Investment Platform",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
