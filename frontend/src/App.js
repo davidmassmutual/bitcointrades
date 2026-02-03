@@ -16,16 +16,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import LoadingSpinner from './components/LoadingSpinner';
 
-// Import CSS
-import './css/Dashboard.css';
-import './css/Home.css';
-import './css/AdminPanel.css';
-import './css/Investment.css';
 
-// Configure axios base URL for development
-if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = 'http://localhost:5000';
-}
 
 function App() {
   const [user, setUser] = useState(null);
