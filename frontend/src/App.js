@@ -22,6 +22,11 @@ import './css/Home.css';
 import './css/AdminPanel.css';
 import './css/Investment.css';
 
+// Configure axios base URL for development
+if (process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = 'http://localhost:5000';
+}
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -54,14 +59,14 @@ function App() {
 
   const fetchBtcPrice = async () => {
     try {
-      // In a real app, you would use a real API like CoinGecko
-      // For now, using a mock implementation
-      const response = await axios.get('https://bitcointrades.onrender.com/api/users/portfolio');
+      // Try to get price from local backend first
+      const response = await axios.get('/api/users/portfolio');
       if (response.data.success) {
         setBtcPrice(response.data.portfolio.currentBtcPrice);
       }
     } catch (error) {
-      // Fallback to mock price
+      // Fallback to mock price if backend is not available
+      console.warn('Backend not available, using mock BTC price:', error.message);
       setBtcPrice(45000 + Math.random() * 10000);
     }
   };
@@ -80,6 +85,33 @@ function App() {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  // If no user and not on home/login/register pages, show a simple message
+  const currentPath = window.location.pathname;
+  const isAuthPage = currentPath === '/' || currentPath === '/login' || currentPath === '/register';
+  
+  if (!user && !isAuthPage) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: '20px'
+      }}>
+        <h2>Please log in to access this page</h2>
+        <div>
+          <a href="/login" style={{ marginRight: '10px', padding: '10px 20px', backgroundColor: '#007bff', color: 'white', textDecoration: 'none', borderRadius: '5px' }}>
+            Login
+          </a>
+          <a href="/register" style={{ padding: '10px 20px', backgroundColor: '#28a745', color: 'white', textDecoration: 'none', borderRadius: '5px' }}>
+            Register
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (
